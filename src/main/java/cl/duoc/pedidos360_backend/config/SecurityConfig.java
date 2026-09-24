@@ -38,7 +38,7 @@ public class SecurityConfig {
                 "https://patatan7.github.io"
 
         ));
-        cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         cfg.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept", "Origin"));
         cfg.setAllowCredentials(true);
         cfg.setMaxAge(3600L);
