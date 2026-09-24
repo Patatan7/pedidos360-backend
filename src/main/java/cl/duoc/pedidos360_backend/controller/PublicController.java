@@ -18,4 +18,14 @@ public class PublicController {
                 "recurso", "/public/hola"
         );
     }
+
+    @GetMapping("/status")
+    public Map<String, String> status() {
+        return Map.of(
+                "sistema", "Pedidos360",
+                "version", "1.0.0",
+                "estado", "operativo",
+                "ambiente", "produccion"
+        );
+    }
 }

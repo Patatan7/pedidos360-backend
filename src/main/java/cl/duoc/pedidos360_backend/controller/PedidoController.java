@@ -69,4 +69,33 @@ public class PedidoController {
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
     }
+
+    // Endpoint GET por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Pedido> obtenerPorId(@PathVariable Long id,
+                                               @AuthenticationPrincipal Jwt jwt) {
+        List<String> roles = jwt.getClaimAsStringList("roles");
+        boolean isAdmin = roles != null && roles.contains("admin");
+        String oid = jwt.getClaimAsString("oid");
+
+        return service.obtenerPorId(id)
+                .filter(p -> isAdmin || p.getUsuarioOid().equals(oid))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // Endpoint cancelar pedido propio (user)
+    @PatchMapping("/{id}/cancelar")
+    public ResponseEntity<Pedido> cancelar(@PathVariable Long id,
+                                           @AuthenticationPrincipal Jwt jwt) {
+        String oid = jwt.getClaimAsString("oid");
+        return service.obtenerPorId(id)
+                .filter(p -> p.getUsuarioOid().equals(oid))
+                .filter(p -> !"CANCELADO".equals(p.getEstado()))
+                .map(p -> {
+                    p.setEstado("CANCELADO");
+                    return ResponseEntity.ok(service.crear(p));
+                })
+                .orElse(ResponseEntity.status(403).build());
+    }
 }
