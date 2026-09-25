@@ -1,6 +1,8 @@
 package cl.duoc.pedidos360_backend.model;
 
 import jakarta.persistence.*;
+import org.springframework.cglib.core.Local;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -29,6 +31,14 @@ public class Pedido {
         if (this.estado == null) this.estado = "PENDIENTE";
     }
 
+    @Column
+    private LocalDateTime updatedAt;
+
+    @PreUpdate
+    public void preUpdate(){
+        this.updatedAt = LocalDateTime.now();
+    }
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getDescripcion() { return descripcion; }
@@ -39,4 +49,6 @@ public class Pedido {
     public void setUsuarioOid(String usuarioOid) { this.usuarioOid = usuarioOid; }
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
     public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }
